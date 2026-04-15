@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'dm-cc-assistant loaded. Run /dm-cc-assistant:project-init to bootstrap a new project.'"
+          }
+        ]
+      }
+    ]
+  }
+}

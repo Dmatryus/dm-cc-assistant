@@ -1,0 +1,28 @@
+{
+  "name": "dm-cc",
+  "owner": {
+    "name": "Dmatryus",
+    "email": "dmatryusdetry@gmail.com"
+  },
+  "metadata": {
+    "description": "Личный каталог Claude Code плагинов от Dmatryus"
+  },
+  "plugins": [
+    {
+      "name": "dm-cc-assistant",
+      "source": "./",
+      "version": "0.1.0",
+      "description": "Guides a new project from zero to a ready Claude Code environment: OVERVIEW.md, ARCHITECTURE.md, CLAUDE.md and a KMP scaffold via a four-step interview flow.",
+      "homepage": "https://github.com/Dmatryus/dm-cc-assistant",
+      "repository": "https://github.com/Dmatryus/dm-cc-assistant",
+      "license": "Apache-2.0",
+      "keywords": [
+        "project-init",
+        "scaffolding",
+        "documentation",
+        "kmp",
+        "interview"
+      ]
+    }
+  ]
+}
