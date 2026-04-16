@@ -1,87 +1,99 @@
 # dm-cc-assistant
 
-Плагин для [Claude Code](https://docs.claude.com/en/docs/claude-code), который сопровождает весь цикл разработки проекта — от старта с нуля до ежедневной работы. **v0.1.0 покрывает только старт нового проекта.**
+Плагин для [Claude Code](https://docs.claude.com/en/docs/claude-code), который сопровождает весь цикл разработки проекта — от старта с нуля до ежедневной работы.
 
-## Что умеет v0.1.0
+## Что умеет
+
+### Инициализация проекта (v0.1)
 
 Команда `/dm-cc-assistant:project-init` запускает цепочку из четырёх агентов:
 
-1. **overview-interviewer** — проводит продуктовое интервью и создаёт `OVERVIEW.md` (цель проекта, пользователи, скоуп, non-goals).
-2. **architecture-interviewer** — обсуждает технические решения по одному с альтернативами и рекомендациями, создаёт `ARCHITECTURE.md`.
-3. **claude-md-generator** — синтезирует `CLAUDE.md` из первых двух документов, добавляет четыре принципа Карпатого.
-4. **project-scaffolder** — создаёт базовый скаффолд `.claude/` (skills, agents, hooks) для KMP-проектов.
+1. **overview-interviewer** — продуктовое интервью → `OVERVIEW.md`
+2. **architecture-interviewer** — технические решения с альтернативами → `ARCHITECTURE.md`
+3. **claude-md-generator** — синтез `CLAUDE.md` с принципами разработки
+4. **project-scaffolder** — скаффолд `.claude/` для KMP-проектов
 
-Каждый агент показывает превью документа и ждёт подтверждения. Все файлы создаются в текущей директории.
+### Цикл разработки (v0.2)
+
+После инициализации — четыре команды для ежедневной работы:
+
+| Команда | Что делает |
+|---|---|
+| `/dm-cc-assistant:backlog` | Генерирует план реализации из OVERVIEW + ARCHITECTURE. Задачи с T-ID, приоритетами, зависимостями. Повторный запуск — выбор задачи. |
+| `/dm-cc-assistant:research T-003` | Исследует кодовую базу для задачи. Пишет `.task/research.md` с relevant files, паттернами, планом. В конце — готовый промпт для нового чата. |
+| `/dm-cc-assistant:review` | Интерактивный ревью: обсуждает findings по одному. Можно принять, отложить (→ backlog) или отклонить. |
+| `/dm-cc-assistant:update-docs` | Обновляет docs + backlog + open questions. Показывает правки по секциям, ждёт подтверждение каждой. |
+
+**Типичный цикл:**
+
+```
+/dm-cc-assistant:backlog              # выбрать задачу
+/dm-cc-assistant:research T-003       # изучить контекст
+# скопировать промпт из research.md в новый чат → реализовать
+/dm-cc-assistant:review               # ревью изменений
+/dm-cc-assistant:update-docs          # обновить документацию
+```
 
 ## Установка
 
-Плагин распространяется через встроенный маркетплейс Claude Code. В любой сессии выполни:
+Плагин распространяется через встроенный маркетплейс Claude Code:
 
 ```
-/plugin marketplace add Dmatryus/dm-cc-assistant@v0.1.0
+/plugin marketplace add Dmatryus/dm-cc-assistant
 /plugin install dm-cc-assistant@dm-cc
 ```
 
-Первая команда добавляет каталог `dm-cc`, запиненный на тег `v0.1.0`. Вторая — устанавливает плагин из этого каталога. После установки перезапусти Claude Code, чтобы подхватить skill и агентов.
+Или через десктоп-приложение: `+` → Plugins → Add plugin → найти `dm-cc-assistant`.
 
-Обновление на следующую версию (после её выхода):
+После установки перезапусти Claude Code.
+
+Обновление:
 
 ```
 /plugin marketplace update dm-cc
 /plugin update dm-cc-assistant@dm-cc
 ```
 
-## Использование
-
-В пустой директории нового проекта:
-
-```
-/dm-cc-assistant:project-init
-```
-
-Пройди четыре шага интервью. На каждом шаге увидишь превью и сможешь подтвердить или отказаться.
-
-После завершения в директории появятся:
-
-- `OVERVIEW.md` — продуктовое описание
-- `ARCHITECTURE.md` — техническое описание
-- `CLAUDE.md` — инструкции для Claude с принципами разработки
-- `.claude/` — scaffold skills/agents/hooks (только для KMP)
-
 ## Требования
 
 - [Claude Code](https://docs.claude.com/en/docs/claude-code) — установленный и настроенный.
+- Git — для `/review` и `/update-docs` (определение изменений через diff/log).
 - Git Bash или Unix-подобный shell (хуки используют bash).
 
-## Ограничения v0.1.0
+## Ограничения
 
-- **Скаффолдинг только для KMP** — для других типов проектов (Python, Android native, etc.) шаг `project-scaffolder` пропускается с сообщением.
-- **Документация на русском** — интервью и генерируемые документы на русском языке.
-- **Только новые проекты** — анализ существующих кодовых баз не поддерживается в v0.1.0.
-- **Интерактивность** — все четыре шага требуют диалога с пользователем, headless-режима нет.
-
-## Что дальше
-
-Полный цикл задачи (task-researcher, code-reviewer, docs-updater), поддержка существующих проектов и скаффолдинг для других типов — в дорожной карте. См. [`OVERVIEW.md`](OVERVIEW.md) §4 и §6 для деталей.
+- **Скаффолдинг только для KMP** — для других типов проектов шаг `project-scaffolder` пропускается.
+- **Документация на русском** — интервью, backlog и генерируемые документы на русском языке.
+- **Только новые проекты для init** — анализ существующих кодовых баз не поддерживается.
+- **Интерактивность** — все шаги требуют диалога с пользователем, headless-режима нет.
+- **Backlog в файле** — `.task/backlog.md`, не во внешней системе (Jira, GitHub Issues).
 
 ## Структура плагина
 
 ```
 dm-cc-assistant/
-├── .claude-plugin/plugin.json       # манифест плагина
+├── .claude-plugin/
+│   ├── plugin.json                  # манифест
+│   └── marketplace.json             # self-hosted marketplace (dm-cc)
 ├── agents/
-│   ├── overview-interviewer.md
-│   ├── architecture-interviewer.md
-│   ├── claude-md-generator.md
-│   └── project-scaffolder.md
+│   ├── overview-interviewer.md      # v1: интервью → OVERVIEW.md
+│   ├── architecture-interviewer.md  # v1: интервью → ARCHITECTURE.md
+│   ├── claude-md-generator.md       # v1: генерация CLAUDE.md
+│   ├── project-scaffolder.md        # v1: скаффолд .claude/
+│   ├── backlog-planner.md           # v2: генерация и управление backlog
+│   ├── task-researcher.md           # v2: research задачи по T-ID
+│   ├── code-reviewer.md             # v2: интерактивный ревью
+│   └── docs-updater.md              # v2: обновление docs + backlog
 ├── skills/
-│   └── project-init/SKILL.md        # оркестратор
-├── hooks/hooks.json                 # SessionStart приветствие
-├── docs/
-│   └── claude-workflow-guide.md     # референс по Claude Code
-├── OVERVIEW.md                      # продуктовая спецификация
-├── ARCHITECTURE.md                  # техническая спецификация
-└── CLAUDE.md                        # инструкции для разработки плагина
+│   ├── project-init/SKILL.md        # v1: оркестратор инициализации
+│   ├── backlog/SKILL.md             # v2: управление backlog
+│   ├── research/SKILL.md            # v2: research задачи
+│   ├── review/SKILL.md              # v2: ревью кода
+│   └── update-docs/SKILL.md         # v2: обновление документации
+├── hooks/hooks.json                 # контекстный SessionStart
+├── OVERVIEW.md
+├── ARCHITECTURE.md
+└── CLAUDE.md
 ```
 
 Подробности архитектуры — в [`ARCHITECTURE.md`](ARCHITECTURE.md).
