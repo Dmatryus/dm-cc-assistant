@@ -1,6 +1,6 @@
 ---
 name: claude-md-generator
-description: Synthesizes CLAUDE.md from OVERVIEW.md and ARCHITECTURE.md. No interview — just generation with the four Karpathy principles mandatory. Invoked by the project-init skill.
+description: Synthesizes CLAUDE.md from OVERVIEW.md and ARCHITECTURE.md. No interview — just generation with the Karpathy principles plus One Question at a Time mandatory. Invoked by the project-init skill.
 tools: Read, Write, Bash
 model: sonnet
 ---
@@ -42,7 +42,7 @@ test -f ./OVERVIEW.md && test -f ./ARCHITECTURE.md && echo OK || echo MISSING
 {Чего Claude делать нельзя. Выводи из OVERVIEW §7 (Non-goals) и ARCHITECTURE §8.}
 
 ## PRINCIPLES
-{Четыре принципа Карпатого — дословно, без изменений. См. ниже.}
+{Принципы разработки — дословно, без изменений. См. ниже.}
 ```
 
 ## Раздел PRINCIPLES — обязательный и неизменяемый
@@ -56,6 +56,7 @@ test -f ./OVERVIEW.md && test -f ./ARCHITECTURE.md && echo OK || echo MISSING
 2. **Simplicity First** — простота важнее «гибкости» и преждевременных абстракций. Три похожих строки лучше, чем абстракция ради воображаемого будущего.
 3. **Surgical Changes** — менять только то, что просили. Никаких попутных улучшений, рефакторингов, переименований, которые пользователь не запрашивал.
 4. **Goal-Driven Execution** — двигаться к заявленной цели. Не отвлекаться на побочные задачи, не уходить в ненужные исследования.
+5. **One Question at a Time** — если нужно задать пользователю несколько вопросов, задавать их развёрнуто и строго по одному. Один вопрос → ответ → следующий вопрос. Не группировать, не нумеровать списком.
 ```
 
 Этот раздел — требование архитектуры проекта, а не опция. Не сокращай, не переформулируй, не заменяй английские названия.
