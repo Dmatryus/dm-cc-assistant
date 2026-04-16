@@ -8,35 +8,45 @@
 
 ```
 dm-cc-assistant/
-├── .claude-plugin/plugin.json       # манифест плагина
-├── agents/                          # агенты — каждый отвечает за один шаг
-│   ├── overview-interviewer.md
-│   ├── architecture-interviewer.md
-│   ├── claude-md-generator.md
-│   └── project-scaffolder.md
-├── skills/project-init/SKILL.md    # оркестратор
-└── hooks/hooks.json                 # базовые hooks
+├── .claude-plugin/
+│   ├── plugin.json                  # манифест плагина
+│   └── marketplace.json             # self-hosted marketplace (dm-cc)
+├── agents/
+│   ├── overview-interviewer.md      # v1: интервью для OVERVIEW.md
+│   ├── architecture-interviewer.md  # v1: интервью для ARCHITECTURE.md
+│   ├── claude-md-generator.md       # v1: генерация CLAUDE.md
+│   ├── project-scaffolder.md        # v1: скаффолдинг .claude/
+│   ├── backlog-planner.md           # v2: генерация и управление backlog
+│   ├── task-researcher.md           # v2: research задачи по T-ID
+│   ├── code-reviewer.md             # v2: интерактивный ревью кода
+│   └── docs-updater.md              # v2: обновление docs + backlog + open questions
+├── skills/
+│   ├── project-init/SKILL.md        # v1: оркестратор инициализации
+│   ├── backlog/SKILL.md             # v2: создание / управление backlog
+│   ├── research/SKILL.md            # v2: research задачи
+│   ├── review/SKILL.md              # v2: ревью изменений
+│   └── update-docs/SKILL.md         # v2: обновление документации
+└── hooks/hooks.json                 # SessionStart + контекстные подсказки
 ```
 
-Агенты общаются через файлы. Каждый читает результат предыдущего из файловой системы.
+v1 агенты общаются через pipeline (файл → следующий агент). v2 агенты независимы — каждый читает из ground truth (git, docs, codebase). `.task/backlog.md` — единственный shared state.
 
 ## HOW
 
-**Тестирование плагина:**
-```bash
-claude --plugin-dir ./dm-cc-assistant
-/dm-cc-assistant:project-init
+**Команды плагина:**
+```
+/dm-cc-assistant:project-init        # v1: инициализация нового проекта
+/dm-cc-assistant:backlog             # v2: создать / показать / управлять backlog
+/dm-cc-assistant:research T-003      # v2: research задачи по ID
+/dm-cc-assistant:review              # v2: ревью текущих изменений
+/dm-cc-assistant:update-docs         # v2: обновить docs + backlog + open questions
 ```
 
-**Перезагрузка после изменений:**
-```
-/reload-plugins
-```
-
-**Проверка агентов:**
-```
-/agents
-```
+**Тестирование плагина (dev):**
+- Через приложение: `+` → Plugins → Add plugin → dm-cc
+- Через CLI: `claude --plugin-dir ./dm-cc-assistant`
+- Перезагрузка: `/reload-plugins`
+- Проверка агентов: `/agents`
 
 ## CONSTRAINTS
 

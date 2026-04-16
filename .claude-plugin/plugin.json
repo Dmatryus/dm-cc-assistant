@@ -1,6 +1,6 @@
 {
   "name": "dm-cc-assistant",
-  "description": "Guides a new project from zero to a ready Claude Code environment: OVERVIEW.md, ARCHITECTURE.md, CLAUDE.md and a KMP scaffold via a four-step interview flow.",
+  "description": "Full development lifecycle assistant: project initialization (OVERVIEW, ARCHITECTURE, CLAUDE.md), backlog planning, task research, interactive code review, and docs updates.",
   "author": {
     "name": "Dmatryus",
     "url": "https://github.com/Dmatryus"
@@ -10,9 +10,12 @@
   "license": "Apache-2.0",
   "keywords": [
     "project-init",
+    "backlog",
+    "code-review",
+    "research",
+    "docs-update",
     "scaffolding",
     "documentation",
-    "kmp",
-    "interview"
+    "kmp"
   ]
 }

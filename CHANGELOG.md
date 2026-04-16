@@ -4,6 +4,29 @@
 
 Формат — [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/), версионирование — [SemVer](https://semver.org/lang/ru/).
 
+## [0.2.0] — 2026-04-16
+
+Backlog + Daily Task Cycle. Плагин теперь покрывает полный цикл разработки, а не только инициализацию.
+
+### Added
+- **`/dm-cc-assistant:backlog`** — генерирует план реализации из OVERVIEW.md + ARCHITECTURE.md. Задачи с T-ID, приоритетами (Critical/High/Medium/Low), зависимостями и итерациями. Повторные запуски показывают статус и позволяют выбрать задачу.
+- **`/dm-cc-assistant:research T-ID`** — исследует кодовую базу и документацию для конкретной задачи из backlog. Пишет `.task/research.md` с relevant files, existing patterns, constraints, suggested approach. В конце — готовый промпт для копирования в новый чат.
+- **`/dm-cc-assistant:review [scope]`** — интерактивный ревью кода. Обсуждает findings по одному с приоритизацией. Пользователь может принять (fix now), отложить (добавляется в backlog с новым T-ID) или отклонить каждый finding.
+- **`/dm-cc-assistant:update-docs [описание]`** — обновляет три слоя: (1) project docs (OVERVIEW, ARCHITECTURE, CLAUDE.md) — targeted edits по секциям с превью, (2) backlog — задача → Done, новые задачи, (3) open questions — сессионные → docs/backlog/глобальные, глобальные → проверка решённости.
+- Агент `backlog-planner` (model: opus) — генерация и управление backlog.
+- Агент `task-researcher` (model: sonnet) — research задачи по T-ID.
+- Агент `code-reviewer` (model: sonnet) — интерактивный ревью.
+- Агент `docs-updater` (model: sonnet) — обновление docs + backlog + open questions.
+- `.task/` directory — рабочая директория для backlog.md, research.md, review.md.
+- Контекстный SessionStart hook — определяет состояние проекта и даёт релевантные подсказки.
+
+### Changed
+- OVERVIEW.md — обновлён скоуп: backlog/research/review/docs-update перешли из Could в Must (v2).
+- ARCHITECTURE.md — Module Map, Data Flow (sequenceDiagram для task cycle), Data Model (`.task/` artifacts).
+- CLAUDE.md — новые команды в WHAT/HOW.
+- SessionStart hook — вместо одной строки теперь context-aware с проверкой CLAUDE.md, backlog.md, research.md.
+- plugin.json / marketplace.json — description, keywords, version 0.2.0.
+
 ## [0.1.1] — 2026-04-16
 
 Фиксы по результатам первого live-теста на реальном проекте (7 багов).
