@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'dm-cc-assistant loaded. Run /dm-cc-assistant:project-init to bootstrap a new project.'"
+            "command": "bash -c 'echo \"dm-cc-assistant loaded.\"; if [ ! -f ./CLAUDE.md ]; then echo \"  No CLAUDE.md found. Run /dm-cc-assistant:project-init to bootstrap.\"; elif [ -f .task/backlog.md ]; then IN=$(grep -c \"^- \\*\\*T-\" .task/backlog.md 2>/dev/null || echo 0); PROG=$(sed -n \"/^## In Progress/,/^## /p\" .task/backlog.md 2>/dev/null | grep -c \"^- \\*\\*T-\" || echo 0); echo \"  Backlog: $PROG in progress, $IN total.\"; if [ -f .task/research.md ]; then echo \"  Found .task/research.md from previous research.\"; fi; else echo \"  No backlog yet. Run /dm-cc-assistant:backlog to create one.\"; fi; echo \"  Commands: :project-init | :backlog | :research T-ID | :review | :update-docs\"'"
           }
         ]
       }
