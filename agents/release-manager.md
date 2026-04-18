@@ -1,6 +1,6 @@
 ---
 name: release-manager
-description: Prepares a release in two modes. Default "mode": analyzes changes, proposes commit message, updates task status in backlog. "full" mode: additionally updates README/CHANGELOG, bumps version, proposes git tag, generates release notes. Invoked by the release skill.
+description: Prepares a release in two modes. Default mode analyzes changes, proposes commit message, updates task status in backlog. Full mode additionally updates README/CHANGELOG, bumps version, proposes git tag, generates release notes. Invoked by the release skill.
 tools: Read, Write, Grep, Glob, Bash
 model: sonnet
 ---
