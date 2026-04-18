@@ -15,23 +15,28 @@
 
 ### Цикл разработки (v0.2)
 
-После инициализации — четыре команды для ежедневной работы:
+После инициализации — пять команд для ежедневной работы (плюс флаги):
 
 | Команда | Что делает |
 |---|---|
-| `/dm-cc-assistant:backlog` | Генерирует план реализации из OVERVIEW + ARCHITECTURE. Задачи с T-ID, приоритетами, зависимостями. Повторный запуск — выбор задачи. |
-| `/dm-cc-assistant:research T-003` | Исследует кодовую базу для задачи. Пишет `.task/research.md` с relevant files, паттернами, планом. В конце — готовый промпт для нового чата. |
+| `/dm-cc-assistant:backlog` | Генерирует план реализации из OVERVIEW + ARCHITECTURE. Задачи с T-ID, приоритетами, зависимостями, волнами параллельного выполнения. Повторный запуск — выбор задачи. |
+| `/dm-cc-assistant:research T-003` | Исследует кодовую базу для задачи. Пишет `.task/research.md` с relevant files, паттернами, планом. Промпт для реализации выводится прямо в чат. |
+| `/dm-cc-assistant:research T-003 --done` | Закрывает задачу: меняет статус на Done в backlog, предлагает commit message. |
 | `/dm-cc-assistant:review` | Интерактивный ревью: обсуждает findings по одному. Можно принять, отложить (→ backlog) или отклонить. |
 | `/dm-cc-assistant:update-docs` | Обновляет docs + backlog + open questions. Показывает правки по секциям, ждёт подтверждение каждой. |
+| `/dm-cc-assistant:release` | Подготовка коммита: анализирует изменения, предлагает commit message, закрывает задачи In Progress. |
+| `/dm-cc-assistant:release full` | Полный релиз: обновляет CHANGELOG.md и README.md, bump версии, предлагает git tag и release notes. |
 
 **Типичный цикл:**
 
 ```
-/dm-cc-assistant:backlog              # выбрать задачу
-/dm-cc-assistant:research T-003       # изучить контекст
-# скопировать промпт из research.md в новый чат → реализовать
-/dm-cc-assistant:review               # ревью изменений
-/dm-cc-assistant:update-docs          # обновить документацию
+/dm-cc-assistant:backlog                    # выбрать задачу
+/dm-cc-assistant:research T-003             # изучить контекст → промпт в чат
+# открыть новый чат → вставить промпт → реализовать
+/dm-cc-assistant:review                     # ревью изменений
+/dm-cc-assistant:research T-003 --done      # закрыть задачу + commit message
+/dm-cc-assistant:update-docs                # обновить документацию
+/dm-cc-assistant:release full               # оформить релиз
 ```
 
 ## Установка
@@ -53,6 +58,8 @@
 /plugin marketplace update dm-cc
 /plugin update dm-cc-assistant@dm-cc
 ```
+
+> **Внимание**: в текущей версии Claude Code Desktop кнопка Update и команда `/plugin update` могут не работать — приложение не делает `git pull` на кешированный marketplace clone и остаётся на старой версии. Workaround — см. раздел [Troubleshooting](#troubleshooting).
 
 ## Требования
 
@@ -81,15 +88,17 @@ dm-cc-assistant/
 │   ├── claude-md-generator.md       # v1: генерация CLAUDE.md
 │   ├── project-scaffolder.md        # v1: скаффолд .claude/
 │   ├── backlog-planner.md           # v2: генерация и управление backlog
-│   ├── task-researcher.md           # v2: research задачи по T-ID
+│   ├── task-researcher.md           # v2: research задачи по T-ID + done mode
 │   ├── code-reviewer.md             # v2: интерактивный ревью
-│   └── docs-updater.md              # v2: обновление docs + backlog
+│   ├── docs-updater.md              # v2: обновление docs + backlog
+│   └── release-manager.md           # v2: подготовка релиза (mode / full)
 ├── skills/
 │   ├── project-init/SKILL.md        # v1: оркестратор инициализации
 │   ├── backlog/SKILL.md             # v2: управление backlog
-│   ├── research/SKILL.md            # v2: research задачи
+│   ├── research/SKILL.md            # v2: research задачи + --done
 │   ├── review/SKILL.md              # v2: ревью кода
-│   └── update-docs/SKILL.md         # v2: обновление документации
+│   ├── update-docs/SKILL.md         # v2: обновление документации
+│   └── release/SKILL.md             # v2: подготовка релиза
 ├── hooks/hooks.json                 # контекстный SessionStart
 ├── OVERVIEW.md
 ├── ARCHITECTURE.md
@@ -97,6 +106,40 @@ dm-cc-assistant/
 ```
 
 Подробности архитектуры — в [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+## Troubleshooting
+
+### Плагин не обновляется на новую версию
+
+**Симптом**: выпустил новую версию плагина (git tag, release), но приложение по-прежнему показывает старую — кнопка Update серая или `/plugin update` не тянет изменения.
+
+**Причина**: Claude Code Desktop не делает `git pull` на кешированный marketplace clone — он остаётся на snapshot'е от первоначального install.
+
+**Решение** — force reinstall:
+
+1. Закрой Claude Code Desktop.
+
+2. Удали **оба** каталога (Windows, Git Bash):
+   ```bash
+   rm -rf "$HOME/.claude/plugins/marketplaces/<marketplace-name>"
+   rm -rf "$HOME/.claude/plugins/cache/<marketplace-name>"
+   ```
+   Для `dm-cc-assistant`: `<marketplace-name>` = `dm-cc`.
+
+3. Обнули `installed_plugins.json` — замени содержимое на:
+   ```json
+   {
+     "version": 2,
+     "plugins": {}
+   }
+   ```
+   Файл: `~/.claude/plugins/installed_plugins.json`.
+
+4. Запусти Claude Code Desktop. При старте сессии приложение пересклонирует marketplace из GitHub и переустановит плагин с актуальной версией.
+
+**Важно**: удалять нужно **оба** каталога. Если удалить только `cache/`, marketplace-клон не обновляется и плагин переустановится из старого snapshot'а.
+
+**Верификация**: после рестарта в `installed_plugins.json` должен появиться новый `gitCommitSha` и `version`. В UI плагина (`+` → Plugins → dm-cc-assistant) должно быть актуальное число skills и agents.
 
 ## Лицензия
 
