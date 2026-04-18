@@ -1,6 +1,6 @@
 ---
 name: release
-description: Prepares a release. Default mode: proposes commit message and updates task status in backlog. Pass "full" for a complete release — updates README/CHANGELOG, bumps version, proposes git tag, generates release notes.
+description: Prepares a release. Default mode proposes commit message and updates task status in backlog. Pass full as argument for a complete release — updates README/CHANGELOG, bumps version, proposes git tag, generates release notes.
 disable-model-invocation: true
 ---
 
