@@ -19,13 +19,15 @@ dm-cc-assistant/
 │   ├── backlog-planner.md           # v2: генерация и управление backlog
 │   ├── task-researcher.md           # v2: research задачи по T-ID
 │   ├── code-reviewer.md             # v2: интерактивный ревью кода
-│   └── docs-updater.md              # v2: обновление docs + backlog + open questions
+│   ├── docs-updater.md              # v2: обновление docs + backlog + open questions
+│   └── release-manager.md           # v2: подготовка релиза (mode / full)
 ├── skills/
 │   ├── project-init/SKILL.md        # v1: оркестратор инициализации
 │   ├── backlog/SKILL.md             # v2: создание / управление backlog
 │   ├── research/SKILL.md            # v2: research задачи
 │   ├── review/SKILL.md              # v2: ревью изменений
-│   └── update-docs/SKILL.md         # v2: обновление документации
+│   ├── update-docs/SKILL.md         # v2: обновление документации
+│   └── release/SKILL.md             # v2: подготовка релиза
 └── hooks/hooks.json                 # SessionStart + контекстные подсказки
 ```
 
@@ -40,6 +42,8 @@ v1 агенты общаются через pipeline (файл → следую�
 /dm-cc-assistant:research T-003      # v2: research задачи по ID
 /dm-cc-assistant:review              # v2: ревью текущих изменений
 /dm-cc-assistant:update-docs         # v2: обновить docs + backlog + open questions
+/dm-cc-assistant:release             # v2: подготовить коммит + закрыть задачи
+/dm-cc-assistant:release full        # v2: полный релиз (CHANGELOG, версия, tag, release notes)
 ```
 
 **Тестирование плагина (dev):**

@@ -11,8 +11,8 @@
     {
       "name": "dm-cc-assistant",
       "source": "./",
-      "version": "0.2.0",
-      "description": "Full development lifecycle assistant: project initialization, backlog planning, task research, interactive code review, and docs updates.",
+      "version": "0.2.1",
+      "description": "Full development lifecycle assistant: project initialization, backlog planning, task research, interactive code review, docs updates, and release management.",
       "homepage": "https://github.com/Dmatryus/dm-cc-assistant",
       "repository": "https://github.com/Dmatryus/dm-cc-assistant",
       "license": "Apache-2.0",
