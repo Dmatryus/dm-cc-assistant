@@ -6,7 +6,9 @@ disable-model-invocation: true
 
 # research — исследование кодовой базы для задачи
 
-Это skill вызывается командой `/dm-cc-assistant:research T-003` (или `/dm-cc-assistant:research описание задачи текстом`). Запускает `task-researcher` через Task tool.
+Это skill вызывается командами:
+- `/dm-cc-assistant:research T-003` — стандартный research
+- `/dm-cc-assistant:research T-003 --done` — закрыть задачу (Done + commit message)
 
 ## Твоя роль как основного Claude
 
@@ -14,13 +16,25 @@ disable-model-invocation: true
 
 ## Вводное сообщение
 
+Если аргументы содержат `--done`:
+
+> Запускаю закрытие задачи. Ассистент подготовит commit message и обновит статус в backlog.
+
+Иначе:
+
 > Запускаю research. Ассистент изучит документацию и кодовую базу, найдёт релевантные файлы, паттерны и ограничения. В конце — готовый промпт для начала реализации в новом чате.
 
 ## Запуск агента
 
-Запусти Task с `subagent_type: task-researcher`. В prompt передай `$ARGUMENTS`:
+Запусти Task с `subagent_type: task-researcher`. В prompt передай `$ARGUMENTS` (включая флаг `--done` если есть):
 
-> Проведи research для задачи: $ARGUMENTS. Работай в текущей директории. Покажи пользователю сводку, получи подтверждение, запиши `.task/research.md`. Верни короткий отчёт.
+Если `$ARGUMENTS` содержит `--done`:
+
+> Работай в режиме done для задачи: $ARGUMENTS. Найди задачу в backlog, собери git контекст, предложи commit message, обнови статус задачи.
+
+Иначе:
+
+> Проведи research для задачи: $ARGUMENTS. Работай в текущей директории. Покажи пользователю сводку, получи подтверждение, запиши `.task/research.md`. Выведи промпт для реализации в чат.
 
 ## Проверка после агента
 
@@ -32,11 +46,7 @@ test -f .task/research.md && echo OK || echo MISSING
 
 ## Итоговая подсказка
 
-> Research готов: `.task/research.md`
->
-> Следующие шаги:
-> 1. Скопируй промпт из конца research.md в новый чат для реализации.
-> 2. После реализации — `/dm-cc-assistant:review` для ревью.
+> После реализации — запусти `/dm-cc-assistant:review` для ревью.
 
 ## Важные правила
 

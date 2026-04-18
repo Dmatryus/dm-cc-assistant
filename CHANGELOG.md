@@ -4,6 +4,26 @@
 
 Формат — [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/), версионирование — [SemVer](https://semver.org/lang/ru/).
 
+## [0.2.1] — 2026-04-18
+
+### Added
+- **`/dm-cc-assistant:release`** — подготовка коммита: анализирует изменения, предлагает commit message, закрывает задачи In Progress в backlog.
+- **`/dm-cc-assistant:release full`** — полный релиз: обновляет CHANGELOG.md и README.md, делает bump версии, предлагает git tag и генерирует release notes.
+- Агент `release-manager` (model: sonnet) — два режима (mode / full), не делает git commit/tag сам — только готовит материалы.
+- Режим `--done` для `/dm-cc-assistant:research T-ID --done` — закрывает задачу в backlog и предлагает commit message.
+
+### Fixed
+- `task-researcher`: промпт для реализации теперь выводится прямо в чат после записи research.md (раньше только в файл).
+- `task-researcher`: результат research виден в чате — краткое резюме findings + промпт.
+- `backlog-planner`: план строится от фундамента (архитектура → инфраструктура → фичи), а не копирует Must-список из OVERVIEW.
+- `backlog-planner`: добавлен шаг анализа реального кода перед генерацией задач.
+
+### Changed
+- `backlog-planner`: новый шаг «Plan parallel execution» — группирует задачи в волны (Wave 1, 2, ...) с предложением имён веток.
+- `research` skill: поддержка флага `--done`.
+- SessionStart hook: счётчик задач исправлен (было total, стало todo), добавлена подсказка `:release`.
+- CLAUDE.md: обновлён список команд и файловая карта.
+
 ## [0.2.0] — 2026-04-16
 
 Backlog + Daily Task Cycle. Плагин теперь покрывает полный цикл разработки, а не только инициализацию.
