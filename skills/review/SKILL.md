@@ -38,7 +38,7 @@ test -f .task/review.md && echo OK || echo MISSING
 
 > Ревью завершён: `.task/review.md`
 >
-> Следующий шаг: `/dm-cc-assistant:update-docs` для обновления документации.
+> Следующий шаг: `/dm-cc-assistant:update-docs` для обновления документации и backlog.
 
 ## Важные правила
 

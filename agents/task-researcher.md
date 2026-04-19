@@ -68,27 +68,38 @@ test -f .task/backlog.md && echo OK || echo NO_BACKLOG
 
 STOP. Жди ответ. Если пользователь хочет обсудить подход — обсуди по одному вопросу за раз.
 
-## Шаг 4 — создай feature branch
+## Шаг 4 — создай worktree
 
 Сформируй имя ветки: `dev/{t-id-lowercase}-{slug}`, где slug — до 4 слов из названия задачи, строчными буквами через дефис (без спецсимволов).
 
-Пример: T-003 «Добавить поддержку dark mode» → `feat/t-003-dark-mode`
+Пример: T-003 «Добавить поддержку dark mode» → `dev/t-003-dark-mode`
+
+Определи путь worktree — рядом с основным репозиторием:
 
 ```bash
-git checkout -b dev/{t-id-lowercase}-{slug}
+REPO=$(basename $(git rev-parse --show-toplevel))
+echo "../${REPO}-{t-id-lowercase}"
 ```
 
-Если ветка уже существует — переключись на неё:
+Создай worktree с новой веткой:
 
 ```bash
-git checkout dev/{t-id-lowercase}-{slug}
+git worktree add "../${REPO}-{t-id-lowercase}" -b dev/{t-id-lowercase}-{slug}
 ```
+
+Если ветка уже существует:
+
+```bash
+git worktree add "../${REPO}-{t-id-lowercase}" dev/{t-id-lowercase}-{slug}
+```
+
+Запомни путь worktree — он понадобится в следующем шаге.
 
 ## Шаг 5 — запись research.md
 
-Имя файла: `.task/research-{t-id-lowercase}.md` (например `.task/research-t-003.md`).
+Имя файла: `{worktree-path}/.task/research-{t-id-lowercase}.md`.
 
-Создай файл (`mkdir -p .task` если нужно):
+Создай файл (`mkdir -p {worktree-path}/.task` если нужно):
 
 ```markdown
 # Research: {T-ID} — {название задачи}
@@ -126,13 +137,15 @@ git checkout dev/{t-id-lowercase}-{slug}
 ```
 **Research завершён: {T-ID} — {название}**
 
-📄 Сохранено в `.task/research-{t-id-lowercase}.md`
+📄 Сохранено в `{worktree-path}/.task/research-{t-id-lowercase}.md`
 🌿 Ветка: `dev/{t-id-lowercase}-{slug}`
+📁 Worktree: `{worktree-path}`
 
 **Промпт для реализации** — скопируй в новый чат:
 
 ---
-Я работаю над задачей {T-ID} — {название} в ветке `dev/{t-id-lowercase}-{slug}`.
+Я работаю над задачей {T-ID} — {название}.
+Рабочая директория: `{worktree-path}` (ветка `dev/{t-id-lowercase}-{slug}`).
 
 Контекст: {1-2 предложения сути задачи из research}
 
@@ -146,7 +159,7 @@ Suggested approach:
 ---
 ```
 
-Верни оркестратору отчёт: «Research для {T-ID} завершён. Ветка `dev/{t-id-lowercase}-{slug}` создана. Промпт выведен в чат.»
+Верни оркестратору отчёт: «Research для {T-ID} завершён. Worktree `{worktree-path}` создан. Промпт выведен в чат.»
 
 ## Режим done
 
@@ -168,7 +181,7 @@ git diff --stat HEAD
 git log --oneline -10
 ```
 
-Если есть `.task/research.md` — прочитай секцию «Suggested Approach» для контекста.
+Если есть `.task/research-{t-id-lowercase}.md` (или в worktree) — прочитай секцию «Suggested Approach» для контекста.
 
 ### Шаг 3 — предложи commit message
 
@@ -208,7 +221,7 @@ STOP. Жди ответ.
 
 ## Ограничения
 
-- В стандартном режиме — создаёт feature branch и пишет только в `.task/research-{t-id}.md`.
+- В стандартном режиме — создаёт worktree + ветку `dev/`, пишет только в `{worktree-path}/.task/research-{t-id}.md`.
 - В режиме done — пишет только в `.task/backlog.md`.
 - Не редактируй исходный код проекта.
 - Работай только в cwd. Пути относительные.
