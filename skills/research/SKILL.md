@@ -39,10 +39,10 @@ disable-model-invocation: true
 ## Проверка после агента
 
 ```bash
-test -f .task/research.md && echo OK || echo MISSING
+ls .task/research-*.md 2>/dev/null && echo OK || echo MISSING
 ```
 
-Если `MISSING` — сообщи «Research не завершён (`.task/research.md` не создан).»
+Если `MISSING` — сообщи «Research не завершён (`.task/research-{T-ID}.md` не создан).»
 
 ## Итоговая подсказка
 

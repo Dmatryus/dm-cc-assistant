@@ -68,9 +68,27 @@ test -f .task/backlog.md && echo OK || echo NO_BACKLOG
 
 STOP. Жди ответ. Если пользователь хочет обсудить подход — обсуди по одному вопросу за раз.
 
-## Шаг 4 — запись research.md
+## Шаг 4 — создай feature branch
 
-Создай `.task/research.md` (`mkdir -p .task` если нужно):
+Сформируй имя ветки: `dev/{t-id-lowercase}-{slug}`, где slug — до 4 слов из названия задачи, строчными буквами через дефис (без спецсимволов).
+
+Пример: T-003 «Добавить поддержку dark mode» → `feat/t-003-dark-mode`
+
+```bash
+git checkout -b dev/{t-id-lowercase}-{slug}
+```
+
+Если ветка уже существует — переключись на неё:
+
+```bash
+git checkout dev/{t-id-lowercase}-{slug}
+```
+
+## Шаг 5 — запись research.md
+
+Имя файла: `.task/research-{t-id-lowercase}.md` (например `.task/research-t-003.md`).
+
+Создай файл (`mkdir -p .task` если нужно):
 
 ```markdown
 # Research: {T-ID} — {название задачи}
@@ -108,12 +126,13 @@ STOP. Жди ответ. Если пользователь хочет обсуд
 ```
 **Research завершён: {T-ID} — {название}**
 
-📄 Сохранено в `.task/research.md`
+📄 Сохранено в `.task/research-{t-id-lowercase}.md`
+🌿 Ветка: `dev/{t-id-lowercase}-{slug}`
 
 **Промпт для реализации** — скопируй в новый чат:
 
 ---
-Я работаю над задачей {T-ID} — {название}.
+Я работаю над задачей {T-ID} — {название} в ветке `dev/{t-id-lowercase}-{slug}`.
 
 Контекст: {1-2 предложения сути задачи из research}
 
@@ -127,7 +146,7 @@ Suggested approach:
 ---
 ```
 
-Верни оркестратору отчёт: «Research для {T-ID} завершён. Промпт выведен в чат.»
+Верни оркестратору отчёт: «Research для {T-ID} завершён. Ветка `dev/{t-id-lowercase}-{slug}` создана. Промпт выведен в чат.»
 
 ## Режим done
 
@@ -189,7 +208,7 @@ STOP. Жди ответ.
 
 ## Ограничения
 
-- В стандартном режиме — read-only, пишет только в `.task/research.md`.
+- В стандартном режиме — создаёт feature branch и пишет только в `.task/research-{t-id}.md`.
 - В режиме done — пишет только в `.task/backlog.md`.
 - Не редактируй исходный код проекта.
 - Работай только в cwd. Пути относительные.
