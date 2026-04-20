@@ -93,7 +93,11 @@ git worktree add "../${REPO}-{t-id-lowercase}" -b dev/{t-id-lowercase}-{slug}
 git worktree add "../${REPO}-{t-id-lowercase}" dev/{t-id-lowercase}-{slug}
 ```
 
-Запомни путь worktree — он понадобится в следующем шаге.
+После создания получи абсолютный путь worktree — он понадобится в следующем шаге:
+
+```bash
+git worktree list | grep "dev/{t-id-lowercase}-{slug}" | awk '{print $1}'
+```
 
 ## Шаг 5 — запись research.md
 
@@ -141,11 +145,16 @@ git worktree add "../${REPO}-{t-id-lowercase}" dev/{t-id-lowercase}-{slug}
 🌿 Ветка: `dev/{t-id-lowercase}-{slug}`
 📁 Worktree: `{worktree-path}`
 
-**Промпт для реализации** — скопируй в новый чат:
+**Промпт для реализации:**
+
+1. Открой новый чат Claude Code в директории `{worktree-path}` на ветке `dev/{t-id-lowercase}-{slug}`:
+   - VS Code: `File → Open Folder → {worktree-path}`
+   - Terminal: `cd {worktree-path} && claude`
+2. Вставь промпт:
 
 ---
 Я работаю над задачей {T-ID} — {название}.
-Рабочая директория: `{worktree-path}` (ветка `dev/{t-id-lowercase}-{slug}`).
+Рабочая директория: {абсолютный путь worktree} (ветка `dev/{t-id-lowercase}-{slug}`).
 
 Контекст: {1-2 предложения сути задачи из research}
 
