@@ -1,0 +1,23 @@
+flowchart TD
+    Start([Проект с OVERVIEW/ARCHITECTURE/CLAUDE]) --> P1
+    P1["/backlog"] --> A1[backlog-planner: эпики E-001, E-002]
+    A1 --> BL[(.task/backlog.md)]
+    BL --> Pick{Выбрать эпик}
+    Pick --> P2["/plan E-001"]
+    P2 --> A2[epic-planner: подзадачи, DAG, волны, риски, DoD]
+    A2 --> PL[(.task/plan-E-001.md)]
+    A2 --> BL2[(backlog.md: E-001 In Progress)]
+    BL2 --> P3["/execute E-001"]
+    P3 --> EX[создаёт feat/E-001 от main]
+    EX --> W1[Волна 1: N execution-agent в worktree]
+    W1 --> R1[release-manager merge: волна → feat/E-001]
+    R1 --> W2[Волна 2]
+    W2 --> Wn[...]
+    Wn --> REP[(.task/report-E-001.md)]
+    REP --> Dlg[Диалог внутри /execute]
+    Dlg -->|принять| P4["/release E-001"]
+    Dlg -->|доработать| P3
+    Dlg -->|откатить| Abort[удалить feat/E-001]
+    P4 --> REL[release-manager full: feat/E-001 → main, CHANGELOG, tag]
+    REL --> Done([Эпик закрыт])
+    Done --> Pick
