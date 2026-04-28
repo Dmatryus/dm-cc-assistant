@@ -21,10 +21,13 @@ test -f ./OVERVIEW.md && test -f ./ARCHITECTURE.md && echo OK || echo MISSING
 
 ## Формат CLAUDE.md
 
-Используй ровно эти шесть разделов в этом порядке:
+Используй ровно эти шесть разделов в этом порядке. **Перед разделами — обязательный edit log header.**
 
 ```markdown
 # {название проекта}
+
+> **Edit log:**
+> - {YYYY-MM-DD} · v0.3.0 · claude-md-generator · создан
 
 ## WHY
 {1–3 предложения: зачем проект существует. Бери из OVERVIEW §1 и §2.}
@@ -44,6 +47,8 @@ test -f ./OVERVIEW.md && test -f ./ARCHITECTURE.md && echo OK || echo MISSING
 ## PRINCIPLES
 {Принципы разработки — дословно, без изменений. См. ниже.}
 ```
+
+**Edit log:** дату подставь через `date +%Y-%m-%d`. Версия плагина — `v0.3.0`. Имя агента — `claude-md-generator`. Описание — `создан`.
 
 ## Раздел PRINCIPLES — обязательный и неизменяемый
 
