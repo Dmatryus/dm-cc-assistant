@@ -11,17 +11,22 @@
     {
       "name": "dm-cc-assistant",
       "source": "./",
-      "version": "0.2.1",
-      "description": "Full development lifecycle assistant: project initialization, backlog planning, task research, interactive code review, docs updates, and release management.",
+      "version": "0.3.0",
+      "description": "Full development lifecycle assistant: project initialization, epic-based backlog planning, autonomous parallel execution with worktree isolation, and release preparation.",
       "homepage": "https://github.com/Dmatryus/dm-cc-assistant",
       "repository": "https://github.com/Dmatryus/dm-cc-assistant",
       "license": "Apache-2.0",
       "keywords": [
         "project-init",
+        "backlog",
+        "epic",
+        "autonomous",
+        "parallel",
+        "worktree",
+        "release",
         "scaffolding",
         "documentation",
-        "kmp",
-        "interview"
+        "kmp"
       ]
     }
   ]
