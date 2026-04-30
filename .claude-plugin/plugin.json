@@ -1,6 +1,7 @@
 {
   "name": "dm-cc-assistant",
-  "description": "Full development lifecycle assistant: project initialization (OVERVIEW, ARCHITECTURE, CLAUDE.md), backlog planning, task research, interactive code review, and docs updates.",
+  "version": "0.3.0",
+  "description": "Full development lifecycle assistant: project initialization (OVERVIEW, ARCHITECTURE, CLAUDE.md), epic-based backlog planning, autonomous parallel execution with worktree isolation, and release preparation.",
   "author": {
     "name": "Dmatryus",
     "url": "https://github.com/Dmatryus"
@@ -11,9 +12,10 @@
   "keywords": [
     "project-init",
     "backlog",
-    "code-review",
-    "research",
-    "docs-update",
+    "epic",
+    "autonomous",
+    "parallel",
+    "worktree",
     "release",
     "scaffolding",
     "documentation",
